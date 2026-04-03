@@ -9,7 +9,7 @@ Minha intenção aqui é pegar o melhor de vários "mundos" e sintetizar para a 
 ```
 my-config-ai/
 ├── AGENTS.md              # Diretrizes para agentes IA neste projeto
-├── LICENSE                # PolyForm Noncommercial 1.0.0
+├── LICENSE                # Apache 2.0 with Commons Clause
 ├── README.md              # Documentação principal
 ├── .kilo/                 # Configurações do Kilo para este projeto
 └── .agents/               # Copiar para pasta padrão da IA
@@ -17,7 +17,9 @@ my-config-ai/
     │   ├── security-auditor.md
     │   └── doc-write.md
     ├── skills/
-    │   └── senior-dev/
+    │   ├── senior-dev/
+    │   │   └── SKILL.md
+    │   └── plan/
     │       └── SKILL.md
     └── workflow/
         └── atomic-commit/
@@ -123,6 +125,28 @@ Inclui:
 - Diretrizes de autenticação JWT
 - Checkpoints para decisões humanas
 
+### plan
+
+Skill para planejamento de projetos com análise de dependências e verificação de objetivos.
+
+**Quando usar**: Ao pedir para planejar um projeto, criar fases e tarefas, ou definir roadmap.
+
+Inclui:
+- Análise de requisitos e histórias de usuário
+- Decomposição em fases e tarefas
+- Grafos de dependência e ondas de execução
+- Verificação de objetivos (loop de revisão)
+- Metodologia de planejamento reverso
+
+**Ativação:**
+```
+/plan
+```
+Ou via skill tool:
+```
+skill name: plan
+```
+
 ## Subagents Disponíveis
 
 ### security-auditor
@@ -174,6 +198,7 @@ skill name: doc-write
 | ------------------------- | ---------------------------------------------------------------- |
 | AGENTS.md                 | Diretrizes de estilo, nomenclatura, imports, tratamento de erros |
 | senior-dev/SKILL.md       | Regras para desenvolvimento sênior com TDD e metodologia XP      |
+| plan/SKILL.md             | Planejamento de projetos com análise de dependências              |
 | agent/security-auditor.md | Auditoria de segurança e detecção de vulnerabilidades            |
 | agent/doc-write.md        | Escrita e atualização de documentação técnica                    |
 

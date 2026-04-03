@@ -17,11 +17,13 @@ my-config-ai/
 ├── README.md
 ├── .kilo/                 # Configurações do Kilo para este projeto
 ├── .agents/
+│   ├── rules/              # Regras personalizadas para o agente plan
 │   ├── agent/
 │   │   ├── security-auditor.md
 │   │   └── doc-write.md
 │   ├── skills/
-│   │   └── senior-dev/SKILL.md
+│   │   ├── senior-dev/SKILL.md
+│   │   └── plan/SKILL.md
 │   └── workflow/
 │       └── atomic-commit/WORKFLOW.md
 ```
@@ -55,6 +57,7 @@ my-config-ai/
 ```
 /use security-auditor
 /use doc-write
+/plan
 /workflow atomic-commit
 ```
 
@@ -190,6 +193,9 @@ Pare e solicite decisão humana para: novas tabelas, mudar autenticação, migra
 ## 8. Skills Disponíveis
 
 - **senior-dev**: Desenvolvimento sênior com TDD, segurança, atomicidade.
+- **plan**: Planejamento de projetos com análise de dependências e verificação de objetivos.
+
+**Ativação:** `/plan`
 
 ---
 

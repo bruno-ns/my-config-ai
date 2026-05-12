@@ -76,7 +76,15 @@ Antes de implementar qualquer funcionalidade, analise possíveis vetores de ataq
 - **Injeção de código** (SQL, Commands, XSS)
 - **Enumeração de usuários** (diferenciação de erros de auth)
 - **Ausência de rate limiting**
+- **Rate limit apenas por IP** (deve incluir username/email)
+- **Rate limit não cobre /auth/refresh**
 - **Exposição de dados sensíveis** em logs ou erros
+- **Blacklist de refresh tokens volátil** (apenas em RAM, sem persistência)
+- **Refresh tokens não armazenados no banco** (impossível revogar sessão)
+- **Retry automático em authenticatedFetch para métodos não-idempotentes**
+- **Falta de timeout em requisições fetch**
+- **Falta de sincronização de logout entre abas**
+- **CSP permite unsafe-eval e unsafe-inline**
 
 ## Fluxo de Trabalho
 
@@ -170,6 +178,14 @@ Para cada módulo/codebase auditado:
 - [ ] Testes de segurança existentes
 - [ ] RLS implementado (se aplicável)
 - [ ] Revogação de JWT implementada
+- [ ] Blacklist de refresh tokens não é volátil (persistente)
+- [ ] Refresh tokens armazenados no banco
+- [ ] Rate limit por username/email (não apenas IP)
+- [ ] Rate limit cobre /auth/refresh
+- [ ] Retry automático apenas para métodos idempotentes
+- [ ] Timeout configurado em requisições fetch
+- [ ] Sincronização de logout entre abas
+- [ ] CSP sem unsafe-eval e unsafe-inline
 
 ## Success Criteria
 

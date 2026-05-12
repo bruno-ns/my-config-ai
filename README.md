@@ -26,26 +26,95 @@ my-config-ai/
             └── WORKFLOW.md
 ```
 
-Preste bem atenção no mapa da estrutura desse projeto onde a pasta mais importante é `.agents/` onde ela deve ser levada para a pasta padrão da sua IA de preferência. Por exemplo:
-Imagine que você tem Claude Code e deseja usar as configurações de IA deste projeto, basta você copiar a pasta `.agents` e renomeá-la para `.claude`. Ira ficar algo semelhante à:
+## Integração com IAs Conhecidas
+
+Cada ferramenta de IA espera uma estrutura de pastas específica. Abaixo o guia para integrar este repositório nas principais IAs.
+
+### Tabela Rápida
+
+| IA | Pasta/Arquivo | Ação |
+|---|---|---|
+| **Claude Code** | `.claude/` + `CLAUDE.md` | Renomear `.agents/` → `.claude/`, `AGENTS.md` → `CLAUDE.md` |
+| **Cursor** | `.cursor/rules/` | Copiar arquivos `.md` para `.cursor/rules/` |
+| **Windsurf** | `.windsurf/rules/` | Copiar arquivos `.md` para `.windsurf/rules/` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Copiar conteúdo do `AGENTS.md` |
+| **Roo Code / Cline** | `CLAUDE.md` + `.claude/` | Copiar `AGENTS.md` → `CLAUDE.md`, `.agents/` → `.claude/` |
+| **Kilo AI** | `.kilo/` + `kilo.jsonc` | Referenciar por path absoluto ou URL (detalhado abaixo) |
+| **Codex CLI** | `CODEX.md` | Copiar `AGENTS.md` → `CODEX.md` |
+
+### Claude Code
+
+1. Copie `AGENTS.md` para a raiz do seu projeto como `CLAUDE.md`
+2. Copie a pasta `.agents/` como `.claude/`
+
 ```
 meu-projeto/
-├── CLAUDE.md              # O "Manual do Projeto" (Instruções, estilos e comandos)
+├── CLAUDE.md
 ├── .claude/
-│   ├── settings.json      # Configurações compartilhadas (vai para o Git)
-│   └── settings.local.json # Configurações privadas (Ignorado pelo Git)
 │   ├── agent/
-│   │   ├── security-auditor.md  # Agent de auditoria de segurança
-│   │   └── doc-write.md         # Agent para documentação
+│   │   ├── security-auditor.md
+│   │   └── doc-write.md
 │   └── skills/
-│       └── senior-dev/
-│           └── SKILL.md # Skill para desenvolvimento sênior
-├── .gitignore             # O Claude adiciona .claude/settings.local.json aqui
+│       ├── senior-dev/SKILL.md
+│       └── plan/SKILL.md
 └── ... (seu código)
 ```
 
-## Uso em Outros Projetos
-Aqui estou criando exemplo para reaproveitar estas configurações de IA em outros projetos utilizando Kilo AI.
+**Como usar:** O Claude Code lê automaticamente o `CLAUDE.md` como instrução principal do projeto. Para usar skills/agents, referencie os arquivos no `CLAUDE.md`:
+
+```markdown
+## Instruções Modulares
+
+- Leia `.claude/agent/security-auditor.md` para auditoria de segurança
+- Leia `.claude/skills/senior-dev/SKILL.md` para desenvolvimento sênior
+```
+
+Os arquivos em `.claude/` funcionam como instruções modulares carregadas sob demanda durante a conversa.
+
+### Cursor
+
+Copie os arquivos de regras para `.cursor/rules/`:
+
+```bash
+cp -r .agents/agent/* meu-projeto/.cursor/rules/
+cp -r .agents/skills/* meu-projeto/.cursor/rules/
+cp -r .agents/workflow/* meu-projeto/.cursor/rules/
+```
+
+O Cursor carrega automaticamente arquivos `.mdc` em `.cursor/rules/`.
+
+**Como usar:** As regras em `.cursor/rules/` são aplicadas automaticamente com base no contexto do arquivo. Para usar um agent/skill específico, mencione no chat em modo Agent que deseja seguir as diretrizes do arquivo desejado (ex.: "siga as regras do security-auditor").
+
+### Windsurf
+
+Copie os arquivos para `.windsurf/rules/`:
+
+```bash
+cp -r .agents/agent/* meu-projeto/.windsurf/rules/
+cp -r .agents/skills/* meu-projeto/.windsurf/rules/
+cp -r .agents/workflow/* meu-projeto/.windsurf/rules/
+```
+
+**Como usar:** O Windsurf carrega automaticamente as regras em `.windsurf/rules/` conforme o contexto. Use o Cascade mencionando qual diretriz deseja ativar (ex.: "use o security-auditor para revisar este código").
+
+### GitHub Copilot
+
+Copie o conteúdo do `AGENTS.md` para `.github/copilot-instructions.md` no seu projeto. O Copilot lê este arquivo para entender o contexto e seguir as instruções.
+
+**Como usar:** O Copilot aplica as instruções automaticamente nas sugestões de código — não há ativação manual de agents/skills. As diretrizes do `AGENTS.md` influenciam o comportamento das sugestões em todo o projeto.
+
+### Roo Code / Cline
+
+Mesma estrutura do Claude Code:
+
+1. Copie `AGENTS.md` → `CLAUDE.md` na raiz do projeto
+2. Copie `.agents/` → `.claude/`
+
+**Como usar:** O Roo Code lê `CLAUDE.md` como instrução de sistema. Para usar agents como custom modes, adicione no `CLAUDE.md` referências aos arquivos em `.claude/agent/`. Também é possível configurar modos personalizados nas settings da extensão apontando para cada arquivo `.md`.
+
+### Kilo AI
+
+O Kilo AI permite referenciar as skills e agents diretamente por caminho absoluto, URL remota ou config global.
 
 ### Opção 1: Via kilo.jsonc (Caminho Absoluto)
 
@@ -111,6 +180,8 @@ skill name: security-auditor
 
 ## Skills Disponíveis
 
+> As formas de ativação abaixo são específicas para **Kilo AI**. Para outras ferramentas, veja [Integração com IAs Conhecidas](#integração-com-ias-conhecidas).
+
 ### senior-dev
 
 Skill para desenvolvimento sênior com TDD, segurança, atomicidade e práticas de código limpo.
@@ -148,6 +219,8 @@ skill name: plan
 ```
 
 ## Subagents Disponíveis
+
+> As formas de ativação abaixo são específicas para **Kilo AI**. Para outras ferramentas, veja [Integração com IAs Conhecidas](#integração-com-ias-conhecidas).
 
 ### security-auditor
 
@@ -231,8 +304,8 @@ skill name: doc-write
 
 ## Requisitos
 
-- Kilo CLI ou VS Code Extension instalado
-- Para usar via URL: repositório público no GitHub
+- A ferramenta de IA de sua escolha (Claude Code, Cursor, Windsurf, Copilot, Kilo AI, Roo Code, etc.)
+- Para usar via URL remota: repositório público no GitHub
 
 ## Contribuindo
 
